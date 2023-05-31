@@ -1,0 +1,208 @@
+FUNKCJA NA STWORZENIE PUSTEJ LISTY (po prostu stworzenie listy)
+struct element *utworz(){
+return NULL;
+}
+FUNKCJA NA WYPISYWANIE WARTOŚCI Z TABLICY TABLIC
+void wypisz(int**tab,unsigned int n, unsigned int m){
+  for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+      printf("%i",tab[i][j]);
+    }
+    printf("\n");
+  }
+}
+ALOKACJA TABLICY TABLIC
+int**aloc(unsigned int n, unsigned int m){
+  int**tab=malloc(n*sizeof(int*));
+  for(int i=0;i<m;i++){
+    tab[i]=malloc(m*sizeof(int));
+  }
+  return tab;
+}
+FUNKCJA NA WPISYWANIE DO TABLICY TABLIC 
+int**wpisz(int**tab,unsigned int n, unsigned int m){
+  for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+      scanf("%i",&tab[i][j]);
+    }
+  }
+  return tab;
+}
+DLUGOSC STRINGA
+int dlugosc(char * tab)
+{
+ int sum=0;
+ while (tab[sum]!=NULL)
+  {
+   sum+=1;
+  }
+ return sum;
+}
+//SLAD MACIERZY
+int Slad(int**tab,unsigned int n){
+  int suma=0;
+  for(int i=0;i<n;i++){
+    suma+=tab[i][i];
+  }
+  return suma;
+}
+//PARZYSTE NA BRZEGACH
+int SumaParzystychNaBrzegach(int**tab,unsigned int n, unsigned int m){
+  int suma=0;
+  for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+      if(i==0 && j==0){
+        suma+=tab[i][j];
+      }else if(i==n-1 && j==0){
+        suma+=tab[i][j];
+      }else if(i==0 && j==m-1){
+        suma+=tab[i][j];
+      }else if(i==n-1 && j==m-1){
+        suma+=tab[i][j];
+      }else{}
+    }
+  }
+  return suma;
+}
+DODANIE W MIEDZY A I B 
+char * chuj(char* napis)
+{
+    int dl = dlugosc(napis);
+    char* nowy = malloc((dl + 1) * sizeof(char));
+    int j = 0;
+    char pomoc;
+
+    for (int i = 0; i < dl; i++) {
+        nowy[j] = napis[i];
+        j++;
+
+        if (i < dl - 1 && ((napis[i] - napis[i + 1]) == 1 || (napis[i] - napis[i + 1]) == -1)) {
+            nowy = realloc(nowy, (dl + 2) * sizeof(char));
+            pomoc = napis[i+1];
+            nowy[j] = 'W';
+            j++;
+            nowy[j] = pomoc;
+            j++;
+            i++;
+        }
+    }
+
+    nowy[j] = '\0';
+
+    return nowy;
+}
+FORMATOWANIE IMIENIA	
+char* Imie(char* napis) {
+    int secondPart = -2;
+    for (int i = 0; i < dlugosc(napis); i++) {
+        if (napis[i] == 32) {
+            secondPart = i;
+            napis[i] = '.';
+        } else if (i == 0) {
+            if (napis[i] >= 97 && napis[i] <= 122) {
+                napis[i] -= 32;
+            }
+        } else if (i == secondPart + 1) {
+            if (napis[i] >= 97 && napis[i] <= 122) {
+                napis[i] -= 32;
+            }
+        } else {
+            if (napis[i] >= 97 && napis[i] <= 122) {
+                // Małe litery
+            } else {
+                napis[i] += 32;
+            }
+        }
+    }
+    return napis;
+}
+
+int main() {
+    char imie[] = "jan kowalski";
+    printf("Imię przed modyfikacją: %s\n", imie);
+
+    char* wynik = Imie(imie);
+
+    printf("Imię po modyfikacji: %s\n", wynik);
+
+    return 0;
+}
+USUNECIE CO DRUGIEGO ELEMENTU Z LISTY 
+struct Element {
+    int dane;
+    struct Element* nastepny;
+};
+
+void dodaj(struct Element** lista, int dane) {
+    struct Element* nowyElement = (struct Element*)malloc(sizeof(struct Element));
+    nowyElement->dane = dane;
+    nowyElement->nastepny = NULL;
+
+    if (*lista == NULL) {
+        *lista = nowyElement;
+    } else {
+        struct Element* aktualny = *lista;
+        while (aktualny->nastepny != NULL) {
+            aktualny = aktualny->nastepny;
+        }
+        aktualny->nastepny = nowyElement;
+    }
+}
+
+void wyswietl(struct Element*Lista){
+  int number=1;
+  while(Lista!=NULL){
+    printf("  %i",Lista->dane);
+
+    Lista=Lista->nastepny;
+    number++;
+  }
+}
+struct Element* coDrugiElement(struct Element* lista) {
+    if (lista == NULL) {
+        return NULL;
+    }
+
+    struct Element* wynik = NULL;
+    struct Element* aktualny = lista;
+    int licznik = 0;
+
+    while (aktualny != NULL) {
+        if (licznik % 2 == 0) {
+            dodaj(&wynik, aktualny->dane);
+        }
+        licznik++;
+        aktualny = aktualny->nastepny;
+    }
+
+    return wynik;
+}
+
+void zwolnijPamiec(struct Element* lista) {
+    struct Element* aktualny = lista;
+    while (aktualny != NULL) {
+        struct Element* temp = aktualny;
+        aktualny = aktualny->nastepny;
+        free(temp);
+    }
+}
+
+int main() {
+    struct Element* lista = NULL;
+    dodaj(&lista, 1);
+    dodaj(&lista, 5);
+    dodaj(&lista, 8);
+    dodaj(&lista, 7);
+    dodaj(&lista, 2);
+    dodaj(&lista, 7);
+    printf("Lista wejściowa: ");
+    printf("%\n");
+    wyswietl(lista);
+    struct Element* wynik = coDrugiElement(lista);
+    printf("Lista wynikowa: ");
+    wyswietl(wynik);
+    zwolnijPamiec(lista);
+    zwolnijPamiec(wynik);
+
+    return 0;
+}
