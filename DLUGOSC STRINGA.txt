@@ -76,7 +76,7 @@ char * chuj(char* napis)
         nowy[j] = napis[i];
         j++;
 
-        if (i < dl - 1 && ((napis[i] - napis[i + 1]) == 1 || (napis[i] - napis[i + 1]) == -1)) {
+       if (i < dlugosc(napis) - 1 && ((napis[i] == 'a' && napis[i + 1] == 'b') || (napis[i] == 'b' && napis[i + 1] == 'a'))) {
             nowy = realloc(nowy, (dl + 2) * sizeof(char));
             pomoc = napis[i+1];
             nowy[j] = 'W';
